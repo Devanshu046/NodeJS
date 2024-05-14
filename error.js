@@ -1,26 +1,21 @@
 const express = require("express");
 const app = express();
 
-app.set("view engine", "ejs")
-app.use(express.static('./public'))
+
 
 app.get("/", (req, res) => {
-  res.render("index",{age:12});
-});
-app.get("/error", (req, res , next) => {
-    throw ("something went wrong")
-  
-});
-app.get("/contact", (req, res) => {
-  res.render("contact");
+  res.send("Dashboard");
 });
 
-app.use(function errorHandler (err, req, res, next) {
-    if (res.headersSent) {
-      return next(err)
-    }
-    res.status(500)
-    res.render('error', { error: err })
-  })
+app.get("/profile", (req, res , next) => {
+  return next(new Error("something went wrong"))
+  
+});
+
+
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
+})
 
 app.listen(3000)
